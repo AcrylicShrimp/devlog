@@ -6,8 +6,15 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-diesel = { version = "1.4", features = ["postgres", "r2d2"] }
+macros = { path = "macros" }
+
+chrono = { version = "0.4" }
+diesel = { version = "1.4", features = ["chrono", "postgres", "r2d2"] }
 dotenv = { version = "0.15" }
+rand = { version = "0.8" }
 rocket = { version = "0.5.0-rc.1", features = ["json"] }
+rust-argon2 = { version = "0.8" }
 serde = { version = "1" }
 serde_json = { version = "1" }
+tracing = { version = "0.1" }
+tracing-subscriber = { version = "0.2" }
