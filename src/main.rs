@@ -74,15 +74,7 @@ async fn main() -> Result<(), Error> {
         .ignite()
         .await?
         .launch()
-        .await
-        .map_err(|err| {
-            event!(
-                Level::ERROR,
-                msg = "error occurred while running the server",
-                ?err
-            );
-            err
-        })?;
+        .await?;
 
     Ok(())
 }
