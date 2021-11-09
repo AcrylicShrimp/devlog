@@ -13,7 +13,9 @@ extern crate macros;
 extern crate rocket;
 
 use db::*;
-use rocket::Error as RocketError;
+use rocket::http::Status;
+use rocket::response::status::Custom;
+use rocket::{Error as RocketError, Request};
 use tracing::{event, instrument, Level};
 use tracing_subscriber::{self, EnvFilter};
 
@@ -47,6 +49,11 @@ impl From<RocketError> for Error {
     }
 }
 
+#[catch(default)]
+fn default_catcher(status: Status, _: &Request) -> Custom<String> {
+    Custom(status, format!("{}", status))
+}
+
 #[instrument]
 #[rocket::main]
 async fn main() -> Result<(), Error> {
@@ -62,6 +69,7 @@ async fn main() -> Result<(), Error> {
             event!(Level::ERROR, msg = "failed to connect to database", ?err);
             err
         })?)
+        .register("/", catchers![default_catcher])
         .mount("/v1/", routes![routes::new_session])
         .ignite()
         .await?
